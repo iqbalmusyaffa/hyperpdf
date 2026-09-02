@@ -63,6 +63,55 @@ definitions:
         - $ref: '#/definitions/model.JobStatus'
         example: COMPLETED
     type: object
+  dto.MergeResponse:
+    properties:
+      created_at:
+        type: string
+      download_url:
+        example: /api/v1/pdf/jobs/550e8400-e29b-41d4-a716-446655440000/download
+        type: string
+      file_count:
+        example: 3
+        type: integer
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      merged_filename:
+        example: merged_document.pdf
+        type: string
+      total_size:
+        example: 3145728
+        type: integer
+    type: object
+  dto.SplitResponse:
+    properties:
+      created_at:
+        type: string
+      download_filename:
+        example: split_contract.pdf
+        type: string
+      download_url:
+        example: /api/v1/pdf/jobs/550e8400-e29b-41d4-a716-446655440000/download
+        type: string
+      generated_count:
+        example: 1
+        type: integer
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      is_zip_archive:
+        example: false
+        type: boolean
+      original_filename:
+        example: contract.pdf
+        type: string
+      page_ranges:
+        example: 1-3
+        type: string
+      split_mode:
+        example: range
+        type: string
+    type: object
   model.CompressionLevel:
     enum:
     - LOW
@@ -226,6 +275,83 @@ paths:
           schema:
             $ref: '#/definitions/dto.APIErrorResponse'
       summary: Download Compressed PDF
+      tags:
+      - PDF
+  /api/v1/pdf/merge:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload multiple PDF files and combine them in order
+      parameters:
+      - description: PDF files to merge
+        in: formData
+        name: files
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.MergeResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+      summary: Merge multiple PDF files
+      tags:
+      - PDF
+  /api/v1/pdf/split:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Split PDF by page range or extract every page to a ZIP archive
+      parameters:
+      - description: PDF file to split
+        in: formData
+        name: file
+        required: true
+        type: file
+      - default: all
+        description: Split mode (range or all)
+        in: formData
+        name: split_mode
+        type: string
+      - description: Page ranges (e.g. 1-3 or 2)
+        in: formData
+        name: page_ranges
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.SplitResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+      summary: Split PDF file
       tags:
       - PDF
   /health:
