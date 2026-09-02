@@ -10,7 +10,7 @@ import (
 
 // CompressRequest represents the form data payload for compression
 type CompressRequest struct {
-	CompressionLevel model.CompressionLevel `form:"compression_level" validate:"required,oneof=LOW MEDIUM HIGH"`
+	CompressionLevel model.CompressionLevel `form:"compression_level" validate:"required,oneof=LOW MEDIUM HIGH ULTRA_EXTREME EXTREME RECOMMENDED HIGH_FIDELITY STUDIO_MASTER CUSTOM_TARGET"`
 }
 
 // JobResponse represents the sanitized public job payload

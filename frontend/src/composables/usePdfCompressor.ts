@@ -1,32 +1,54 @@
 import { ref, computed } from 'vue'
 import { pdfApi } from '../api/pdfApi'
+import { useAuth } from './useAuth'
 import type { CompressionLevel, JobResponse, LevelOption } from '../types'
 
 export const levelOptions: LevelOption[] = [
   {
-    id: 'LOW',
-    name: 'Low Compression',
-    badge: 'Best Quality',
-    description: 'Minimal reduction, preserves highest image and vector fidelity.',
-    quality: 'High (~300 DPI)',
-    compression: 'Light (~20-40%)',
-  },
-  {
-    id: 'MEDIUM',
-    name: 'Medium Compression',
-    badge: 'Recommended',
-    description: 'Smart compression balancing sharp text/images with great reduction.',
-    quality: 'Medium (~150 DPI)',
-    compression: 'Balanced (~50-70%)',
-    recommended: true,
+    id: 'ULTRA_EXTREME',
+    name: 'Ultra Extreme',
+    badge: 'Smallest Size',
+    description: 'Maximum aggressive shrink for tight upload limits (CPNS/job portals).',
+    quality: 'Basic (~50 DPI)',
+    compression: 'Massive (~80-95%)',
+    isProOnly: false,
   },
   {
     id: 'HIGH',
     name: 'Extreme Compression',
-    badge: 'Smallest Size',
-    description: 'Maximum compression to reach the smallest possible file footprint.',
-    quality: 'Standard (~72 DPI)',
-    compression: 'Maximum (~70-90%)',
+    badge: 'Web & Email',
+    description: 'High compression ratio for email attachments and web sharing.',
+    quality: 'Screen (~72 DPI)',
+    compression: 'High (~70-85%)',
+    isProOnly: false,
+  },
+  {
+    id: 'MEDIUM',
+    name: 'Balanced Compression',
+    badge: 'Recommended',
+    description: 'Smart compression balancing crisp text and images with great size savings.',
+    quality: 'eBook (~150 DPI)',
+    compression: 'Balanced (~50-70%)',
+    recommended: true,
+    isProOnly: false,
+  },
+  {
+    id: 'LOW',
+    name: 'High-Fidelity',
+    badge: 'Print Ready',
+    description: 'Crisp typography and vector graphics ideal for client presentations.',
+    quality: 'Print (~220 DPI)',
+    compression: 'Light (~25-45%)',
+    isProOnly: true,
+  },
+  {
+    id: 'STUDIO_MASTER',
+    name: 'Studio Master Lossless',
+    badge: 'Lossless Archive',
+    description: 'Preserves 300+ DPI resolution for publishing, blueprints, and legal archives.',
+    quality: 'Prepress (~300+ DPI)',
+    compression: 'Ultra-Light (~10-25%)',
+    isProOnly: true,
   },
 ]
 
@@ -116,6 +138,10 @@ export function usePdfCompressor() {
 
       jobResult.value = result
       processingStep.value = 'completed'
+
+      // Record daily usage
+      const { recordCompressionUsage } = useAuth()
+      recordCompressionUsage()
     } catch (err: any) {
       processingStep.value = 'error'
       if (err.response?.data?.errors?.length) {
