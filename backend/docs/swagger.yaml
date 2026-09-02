@@ -1,0 +1,251 @@
+basePath: /
+definitions:
+  dto.APIErrorResponse:
+    properties:
+      errors:
+        example:
+        - '["Invalid input"]'
+        items:
+          type: string
+        type: array
+      message:
+        example: An error occurred
+        type: string
+      success:
+        example: false
+        type: boolean
+    type: object
+  dto.APIResponse:
+    properties:
+      data: {}
+      message:
+        example: Operation completed successfully
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+  dto.JobResponse:
+    properties:
+      completed_at:
+        example: "2026-09-02T14:30:05Z"
+        type: string
+      compressed_size:
+        example: 1835008
+        type: integer
+      compression_level:
+        allOf:
+        - $ref: '#/definitions/model.CompressionLevel'
+        example: MEDIUM
+      compression_percentage:
+        example: 65
+        type: number
+      created_at:
+        example: "2026-09-02T14:30:00Z"
+        type: string
+      error_message:
+        example: ""
+        type: string
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      original_filename:
+        example: document.pdf
+        type: string
+      original_size:
+        example: 5242880
+        type: integer
+      saved_bytes:
+        example: 3407872
+        type: integer
+      status:
+        allOf:
+        - $ref: '#/definitions/model.JobStatus'
+        example: COMPLETED
+    type: object
+  model.CompressionLevel:
+    enum:
+    - LOW
+    - MEDIUM
+    - HIGH
+    type: string
+    x-enum-varnames:
+    - LevelLow
+    - LevelMedium
+    - LevelHigh
+  model.JobStatus:
+    enum:
+    - PENDING
+    - PROCESSING
+    - COMPLETED
+    - FAILED
+    type: string
+    x-enum-varnames:
+    - StatusPending
+    - StatusProcessing
+    - StatusCompleted
+    - StatusFailed
+host: localhost:8080
+info:
+  contact:
+    email: support@pdfcompressor.local
+    name: API Support
+  description: High-performance PDF compression service powered by Go, Fiber, Ghostscript,
+    and PostgreSQL.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: PDF Compressor API
+  version: "1.0"
+paths:
+  /api/v1/pdf/compress:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a PDF file and compress it based on the specified level
+        (LOW, MEDIUM, HIGH)
+      parameters:
+      - description: PDF File to compress
+        in: formData
+        name: file
+        required: true
+        type: file
+      - default: MEDIUM
+        description: Compression Level (LOW, MEDIUM, HIGH)
+        in: formData
+        name: compression_level
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.JobResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+      summary: Compress PDF
+      tags:
+      - PDF
+  /api/v1/pdf/jobs/{id}:
+    delete:
+      description: Delete a compression job and all corresponding files from disk
+      parameters:
+      - description: Job UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+      summary: Delete Job
+      tags:
+      - PDF
+    get:
+      description: Retrieve compression job details and status by Job UUID
+      parameters:
+      - description: Job UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.JobResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+      summary: Get Job Details
+      tags:
+      - PDF
+  /api/v1/pdf/jobs/{id}/download:
+    get:
+      description: Download the compressed PDF file for a completed job
+      parameters:
+      - description: Job UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/pdf
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+      summary: Download Compressed PDF
+      tags:
+      - PDF
+  /health:
+    get:
+      description: Check service uptime, database connection, and PDF engine availability
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/dto.APIErrorResponse'
+      summary: System Health Check
+      tags:
+      - Health
+schemes:
+- http
+- https
+swagger: "2.0"

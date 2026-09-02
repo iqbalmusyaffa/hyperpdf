@@ -1,0 +1,25 @@
+# Go
+backend/server.exe
+backend/server
+backend/storage/uploads/*
+backend/storage/outputs/*
+!backend/storage/uploads/.gitkeep
+!backend/storage/outputs/.gitkeep
+backend/.env
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
