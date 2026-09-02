@@ -1,4 +1,14 @@
-export type CompressionLevel = 'LOW' | 'MEDIUM' | 'HIGH'
+export type CompressionLevel =
+  | 'ULTRA_EXTREME'
+  | 'EXTREME'
+  | 'HIGH'
+  | 'RECOMMENDED'
+  | 'MEDIUM'
+  | 'HIGH_FIDELITY'
+  | 'LOW'
+  | 'STUDIO_MASTER'
+  | 'CUSTOM_TARGET'
+
 export type JobStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED'
 
 export interface JobResponse {
@@ -35,6 +45,7 @@ export interface LevelOption {
   quality: string
   compression: string
   recommended?: boolean
+  isProOnly?: boolean
 }
 
 export type PDFTool = 'compress' | 'merge' | 'split'

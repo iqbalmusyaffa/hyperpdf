@@ -38,7 +38,7 @@
             <span class="text-brand-600 group-hover:underline">Choose PDF file</span> or drag & drop here
           </p>
           <p class="text-sm text-slate-500">
-            Up to 50 MB per file • High-fidelity Ghostscript engine
+            Up to 50 MB per file • High-fidelity HyperPDF engine
           </p>
         </div>
 

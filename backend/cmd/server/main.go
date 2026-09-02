@@ -23,13 +23,13 @@ import (
 	fiberSwagger "github.com/swaggo/fiber-swagger"
 )
 
-// @title PDF Compressor API
+// @title HyperPDF API
 // @version 1.0
-// @description High-performance PDF compression service powered by Go, Fiber, Ghostscript, and PostgreSQL.
+// @description Next-Gen High-Performance PDF Suite API (Compress, Merge, Split) powered by Go, Fiber, Ghostscript, and PostgreSQL.
 // @termsOfService http://swagger.io/terms/
 
-// @contact.name API Support
-// @contact.email support@pdfcompressor.local
+// @contact.name HyperPDF Support
+// @contact.email support@hyperpdf.local
 
 // @license.name MIT
 // @license.url https://opensource.org/licenses/MIT
@@ -118,14 +118,16 @@ func main() {
 
 	// 8. Register Routes
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusOK).JSON(dto.NewSuccessResponse("PDF Compressor API is running", fiber.Map{
-			"service":      "PDF Compressor API",
+		return c.Status(fiber.StatusOK).JSON(dto.NewSuccessResponse("HyperPDF API is running", fiber.Map{
+			"service":      "HyperPDF API",
 			"version":      "1.0.0",
 			"frontend_url": "http://localhost:3000",
 			"swagger_docs": "http://localhost:8080/swagger/index.html",
 			"health_check": "http://localhost:8080/health",
 			"endpoints": fiber.Map{
 				"compress": "POST /api/v1/pdf/compress",
+				"merge":    "POST /api/v1/pdf/merge",
+				"split":    "POST /api/v1/pdf/split",
 				"get_job":  "GET /api/v1/pdf/jobs/:id",
 				"download": "GET /api/v1/pdf/jobs/:id/download",
 				"delete":   "DELETE /api/v1/pdf/jobs/:id",

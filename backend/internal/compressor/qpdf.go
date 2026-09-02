@@ -59,12 +59,12 @@ func (q *QPDFCompressor) Compress(ctx context.Context, inputPath, outputPath str
 	}
 
 	switch level {
-	case model.LevelLow:
+	case model.LevelStudioMaster, model.LevelHighFidelity, model.LevelLow:
 		// Basic stream compression
-	case model.LevelMedium:
+	case model.LevelRecommended, model.LevelMedium, model.LevelCustomTarget:
 		// Recompress flate streams
 		args = append(args, "--recompress-flate")
-	case model.LevelHigh:
+	case model.LevelExtreme, model.LevelHigh, model.LevelUltraExtreme:
 		// Recompress flate and generate object streams
 		args = append(args, "--recompress-flate", "--object-streams=generate")
 	default:

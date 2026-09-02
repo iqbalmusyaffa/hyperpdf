@@ -46,12 +46,18 @@ func (m *DevMockCompressor) Compress(ctx context.Context, inputPath, outputPath 
 	// Determine reduction ratio based on level
 	var targetRatio float64
 	switch level {
-	case model.LevelLow:
-		targetRatio = 0.70 // 30% reduction
-	case model.LevelMedium:
-		targetRatio = 0.40 // 60% reduction
-	case model.LevelHigh:
-		targetRatio = 0.20 // 80% reduction
+	case model.LevelStudioMaster:
+		targetRatio = 0.85 // 15% reduction (Maximum quality)
+	case model.LevelHighFidelity, model.LevelLow:
+		targetRatio = 0.65 // 35% reduction (Crisp print quality)
+	case model.LevelRecommended, model.LevelMedium:
+		targetRatio = 0.40 // 60% reduction (Best balance)
+	case model.LevelExtreme, model.LevelHigh:
+		targetRatio = 0.20 // 80% reduction (Web & Email)
+	case model.LevelUltraExtreme:
+		targetRatio = 0.10 // 90% reduction (Smallest size)
+	case model.LevelCustomTarget:
+		targetRatio = 0.50 // 50% reduction
 	default:
 		targetRatio = 0.50
 	}

@@ -61,15 +61,18 @@ func (g *GhostscriptCompressor) Compress(ctx context.Context, inputPath, outputP
 	// Determine PDF settings based on compression level
 	var pdfSettings string
 	switch level {
-	case model.LevelLow:
-		// High quality, minimal compression (~300 DPI)
+	case model.LevelStudioMaster:
+		pdfSettings = "-dPDFSETTINGS=/prepress"
+	case model.LevelHighFidelity, model.LevelLow:
 		pdfSettings = "-dPDFSETTINGS=/printer"
-	case model.LevelMedium:
-		// Balanced quality and file size (~150 DPI)
+	case model.LevelRecommended, model.LevelMedium:
 		pdfSettings = "-dPDFSETTINGS=/ebook"
-	case model.LevelHigh:
-		// Maximum compression, smaller file size (~72 DPI)
+	case model.LevelExtreme, model.LevelHigh:
 		pdfSettings = "-dPDFSETTINGS=/screen"
+	case model.LevelUltraExtreme:
+		pdfSettings = "-dPDFSETTINGS=/screen"
+	case model.LevelCustomTarget:
+		pdfSettings = "-dPDFSETTINGS=/ebook"
 	default:
 		return fmt.Errorf("%w: %s", ErrInvalidLevel, level)
 	}
@@ -96,24 +99,44 @@ func (g *GhostscriptCompressor) Compress(ctx context.Context, inputPath, outputP
 	}
 
 	switch level {
-	case model.LevelLow:
+	case model.LevelStudioMaster:
 		args = append(args,
-			"-dColorImageResolution=200",
-			"-dGrayImageResolution=200",
-			"-dMonoImageResolution=200",
+			"-dColorImageResolution=300",
+			"-dGrayImageResolution=300",
+			"-dMonoImageResolution=300",
 		)
-	case model.LevelMedium:
+	case model.LevelHighFidelity, model.LevelLow:
+		args = append(args,
+			"-dColorImageResolution=220",
+			"-dGrayImageResolution=220",
+			"-dMonoImageResolution=220",
+		)
+	case model.LevelRecommended, model.LevelMedium:
 		args = append(args,
 			"-dColorImageResolution=150",
 			"-dGrayImageResolution=150",
 			"-dMonoImageResolution=150",
 			"-dOptimize=true",
 		)
-	case model.LevelHigh:
+	case model.LevelExtreme, model.LevelHigh:
 		args = append(args,
 			"-dColorImageResolution=72",
 			"-dGrayImageResolution=72",
 			"-dMonoImageResolution=72",
+			"-dOptimize=true",
+		)
+	case model.LevelUltraExtreme:
+		args = append(args,
+			"-dColorImageResolution=50",
+			"-dGrayImageResolution=50",
+			"-dMonoImageResolution=50",
+			"-dOptimize=true",
+		)
+	case model.LevelCustomTarget:
+		args = append(args,
+			"-dColorImageResolution=100",
+			"-dGrayImageResolution=100",
+			"-dMonoImageResolution=100",
 			"-dOptimize=true",
 		)
 	}

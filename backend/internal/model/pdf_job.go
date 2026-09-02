@@ -21,9 +21,15 @@ const (
 type CompressionLevel string
 
 const (
-	LevelLow    CompressionLevel = "LOW"
-	LevelMedium CompressionLevel = "MEDIUM"
-	LevelHigh   CompressionLevel = "HIGH"
+	LevelUltraExtreme CompressionLevel = "ULTRA_EXTREME" // 50 DPI - Maximum Shrink (Free)
+	LevelExtreme      CompressionLevel = "EXTREME"       // 72 DPI - Web & Email (Free)
+	LevelHigh         CompressionLevel = "HIGH"          // Alias for EXTREME
+	LevelRecommended  CompressionLevel = "RECOMMENDED"   // 150 DPI - Best Balance (Free)
+	LevelMedium       CompressionLevel = "MEDIUM"        // Alias for RECOMMENDED
+	LevelHighFidelity CompressionLevel = "HIGH_FIDELITY" // 220 DPI - Crisp & Print-Ready (PRO ⭐)
+	LevelLow          CompressionLevel = "LOW"           // Alias for HIGH_FIDELITY
+	LevelStudioMaster CompressionLevel = "STUDIO_MASTER" // 300+ DPI - Lossless Archive (PRO ⭐)
+	LevelCustomTarget CompressionLevel = "CUSTOM_TARGET" // Precision Target Size (PRO ⭐)
 )
 
 // PDFJob represents a PDF compression job database record
