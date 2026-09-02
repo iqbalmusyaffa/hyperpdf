@@ -1,5 +1,5 @@
 import axios, { AxiosProgressEvent } from 'axios'
-import type { APIResponse, JobResponse, CompressionLevel } from '../types'
+import type { APIResponse, JobResponse, CompressionLevel, MergeResponse, SplitResponse } from '../types'
 
 const apiClient = axios.create({
   baseURL: '/',
@@ -38,6 +38,78 @@ export const pdfApi = {
 
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || 'Failed to compress PDF')
+    }
+
+    return response.data.data
+  },
+
+  async mergePDF(
+    files: File[],
+    onProgress?: (progress: number) => void
+  ): Promise<MergeResponse> {
+    const formData = new FormData()
+    files.forEach((file) => {
+      formData.append('files', file)
+    })
+
+    const response = await apiClient.post<APIResponse<MergeResponse>>(
+      '/api/v1/pdf/merge',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+          if (progressEvent.total && onProgress) {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            )
+            onProgress(percentCompleted)
+          }
+        },
+      }
+    )
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.message || 'Failed to merge PDF files')
+    }
+
+    return response.data.data
+  },
+
+  async splitPDF(
+    file: File,
+    splitMode: 'range' | 'all',
+    pageRanges?: string,
+    onProgress?: (progress: number) => void
+  ): Promise<SplitResponse> {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('split_mode', splitMode)
+    if (pageRanges) {
+      formData.append('page_ranges', pageRanges)
+    }
+
+    const response = await apiClient.post<APIResponse<SplitResponse>>(
+      '/api/v1/pdf/split',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+          if (progressEvent.total && onProgress) {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            )
+            onProgress(percentCompleted)
+          }
+        },
+      }
+    )
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.message || 'Failed to split PDF')
     }
 
     return response.data.data

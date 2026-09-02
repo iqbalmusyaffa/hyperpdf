@@ -225,6 +225,131 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/pdf/merge": {
+            "post": {
+                "description": "Upload multiple PDF files and combine them in order",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PDF"
+                ],
+                "summary": "Merge multiple PDF files",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "PDF files to merge",
+                        "name": "files",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.MergeResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.APIErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.APIErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/pdf/split": {
+            "post": {
+                "description": "Split PDF by page range or extract every page to a ZIP archive",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PDF"
+                ],
+                "summary": "Split PDF file",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "PDF file to split",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "all",
+                        "description": "Split mode (range or all)",
+                        "name": "split_mode",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Page ranges (e.g. 1-3 or 2)",
+                        "name": "page_ranges",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.SplitResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.APIErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.APIErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "description": "Check service uptime, database connection, and PDF engine availability",
@@ -343,6 +468,74 @@ const docTemplate = `{
                         }
                     ],
                     "example": "COMPLETED"
+                }
+            }
+        },
+        "dto.MergeResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "download_url": {
+                    "type": "string",
+                    "example": "/api/v1/pdf/jobs/550e8400-e29b-41d4-a716-446655440000/download"
+                },
+                "file_count": {
+                    "type": "integer",
+                    "example": 3
+                },
+                "id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "merged_filename": {
+                    "type": "string",
+                    "example": "merged_document.pdf"
+                },
+                "total_size": {
+                    "type": "integer",
+                    "example": 3145728
+                }
+            }
+        },
+        "dto.SplitResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "download_filename": {
+                    "type": "string",
+                    "example": "split_contract.pdf"
+                },
+                "download_url": {
+                    "type": "string",
+                    "example": "/api/v1/pdf/jobs/550e8400-e29b-41d4-a716-446655440000/download"
+                },
+                "generated_count": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "is_zip_archive": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "original_filename": {
+                    "type": "string",
+                    "example": "contract.pdf"
+                },
+                "page_ranges": {
+                    "type": "string",
+                    "example": "1-3"
+                },
+                "split_mode": {
+                    "type": "string",
+                    "example": "range"
                 }
             }
         },

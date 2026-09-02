@@ -36,3 +36,26 @@ export interface LevelOption {
   compression: string
   recommended?: boolean
 }
+
+export type PDFTool = 'compress' | 'merge' | 'split'
+
+export interface MergeResponse {
+  id: string
+  merged_filename: string
+  file_count: number
+  total_size: number
+  download_url: string
+  created_at: string
+}
+
+export interface SplitResponse {
+  id: string
+  original_filename: string
+  split_mode: string
+  page_ranges?: string
+  generated_count: number
+  is_zip_archive: boolean
+  download_filename: string
+  download_url: string
+  created_at: string
+}
