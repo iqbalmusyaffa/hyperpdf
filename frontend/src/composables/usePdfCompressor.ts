@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { pdfApi } from '../api/pdfApi'
 import { useAuth } from './useAuth'
+import { useHistory } from './useHistory'
 import type { CompressionLevel, JobResponse, LevelOption } from '../types'
 
 export const levelOptions: LevelOption[] = [
@@ -121,7 +122,6 @@ export function usePdfCompressor() {
     processingStep.value = 'uploading'
 
     try {
-      // Simulate progress progression for smooth UX
       const result = await pdfApi.compressPDF(
         selectedFile.value,
         compressionLevel.value,
@@ -142,6 +142,17 @@ export function usePdfCompressor() {
       // Record daily usage
       const { recordCompressionUsage } = useAuth()
       recordCompressionUsage()
+
+      // Record to history
+      const { addHistoryItem } = useHistory()
+      addHistoryItem({
+        tool: 'compress',
+        filename: result.original_filename,
+        originalSize: result.original_size,
+        resultSize: result.compressed_size,
+        savedPercentage: Math.round(result.compression_percentage),
+        downloadUrl: pdfApi.getDownloadUrl(result.id),
+      })
     } catch (err: any) {
       processingStep.value = 'error'
       if (err.response?.data?.errors?.length) {

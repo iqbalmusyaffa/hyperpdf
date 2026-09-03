@@ -1,12 +1,12 @@
 <template>
-  <div class="bg-white border border-slate-200 rounded-3xl p-8 sm:p-12 shadow-sm text-center max-w-xl mx-auto space-y-8">
+  <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-8 sm:p-12 shadow-sm text-center max-w-xl mx-auto space-y-8 animate-fade-in">
     <!-- Animated Processing Icon -->
     <div class="relative w-24 h-24 mx-auto flex items-center justify-center">
-      <div class="absolute inset-0 rounded-full border-4 border-slate-100"></div>
+      <div class="absolute inset-0 rounded-full border-4 border-slate-100 dark:border-slate-700"></div>
       <div
         class="absolute inset-0 rounded-full border-4 border-brand-500 border-t-transparent animate-spin"
       ></div>
-      <div class="w-16 h-16 rounded-full bg-brand-50 text-brand-500 flex items-center justify-center">
+      <div class="w-16 h-16 rounded-full bg-brand-50 dark:bg-brand-900/30 text-brand-500 flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
         </svg>
@@ -15,50 +15,50 @@
 
     <!-- Status Messages -->
     <div class="space-y-2">
-      <h3 class="text-2xl font-extrabold text-slate-900">
+      <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white">
         {{ currentStepTitle }}
       </h3>
-      <p class="text-sm text-slate-500 max-w-md mx-auto">
+      <p class="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
         {{ currentStepDescription }}
       </p>
     </div>
 
     <!-- Progress Bar -->
     <div class="space-y-2">
-      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200">
+      <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200 dark:border-slate-600">
         <div
           class="bg-gradient-to-r from-brand-500 to-rose-400 h-2 rounded-full transition-all duration-300 ease-out"
           :style="{ width: `${progressPercentage}%` }"
         ></div>
       </div>
-      <div class="flex justify-between text-xs font-semibold text-slate-500">
-        <span>Processing</span>
+      <div class="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <span>Memproses</span>
         <span>{{ progressPercentage }}%</span>
       </div>
     </div>
 
     <!-- Active Step List -->
-    <div class="grid grid-cols-3 gap-2 pt-4 border-t border-slate-100 text-xs">
+    <div class="grid grid-cols-3 gap-2 pt-4 border-t border-slate-100 dark:border-slate-700 text-xs">
       <div
         class="flex flex-col items-center space-y-1"
-        :class="step === 'uploading' || step === 'compressing' || step === 'finalizing' ? 'text-brand-600 font-bold' : 'text-slate-400'"
+        :class="step === 'uploading' || step === 'compressing' || step === 'finalizing' ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-400'"
       >
         <div class="w-2 h-2 rounded-full" :class="step === 'uploading' ? 'bg-brand-500 animate-ping' : 'bg-brand-500'"></div>
-        <span>1. Upload</span>
+        <span>1. Unggah</span>
       </div>
       <div
         class="flex flex-col items-center space-y-1"
-        :class="step === 'compressing' || step === 'finalizing' ? 'text-brand-600 font-bold' : 'text-slate-400'"
+        :class="step === 'compressing' || step === 'finalizing' ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-400'"
       >
-        <div class="w-2 h-2 rounded-full" :class="step === 'compressing' ? 'bg-brand-500 animate-ping' : step === 'finalizing' ? 'bg-brand-500' : 'bg-slate-300'"></div>
-        <span>2. Compress</span>
+        <div class="w-2 h-2 rounded-full" :class="step === 'compressing' ? 'bg-brand-500 animate-ping' : step === 'finalizing' ? 'bg-brand-500' : 'bg-slate-300 dark:bg-slate-600'"></div>
+        <span>2. Kompres</span>
       </div>
       <div
         class="flex flex-col items-center space-y-1"
-        :class="step === 'finalizing' ? 'text-brand-600 font-bold' : 'text-slate-400'"
+        :class="step === 'finalizing' ? 'text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-400'"
       >
-        <div class="w-2 h-2 rounded-full" :class="step === 'finalizing' ? 'bg-brand-500 animate-ping' : 'bg-slate-300'"></div>
-        <span>3. Finalize</span>
+        <div class="w-2 h-2 rounded-full" :class="step === 'finalizing' ? 'bg-brand-500 animate-ping' : 'bg-slate-300 dark:bg-slate-600'"></div>
+        <span>3. Finalisasi</span>
       </div>
     </div>
   </div>
@@ -83,26 +83,26 @@ const progressPercentage = computed(() => {
 const currentStepTitle = computed(() => {
   switch (props.step) {
     case 'uploading':
-      return 'Uploading Document...'
+      return 'Mengunggah Dokumen...'
     case 'compressing':
-      return 'Compressing PDF...'
+      return 'Mengompresi PDF...'
     case 'finalizing':
-      return 'Calculating Savings...'
+      return 'Menghitung Penghematan...'
     default:
-      return 'Preparing Optimization...'
+      return 'Menyiapkan Optimasi...'
   }
 })
 
 const currentStepDescription = computed(() => {
   switch (props.step) {
     case 'uploading':
-      return 'Securely sending your file to the processing engine.'
+      return 'Mengirimkan file secara aman ke mesin pemrosesan.'
     case 'compressing':
-      return 'Applying Ghostscript compression algorithm and optimizing raster streams.'
+      return 'Menerapkan algoritma kompresi dan mengoptimalkan gambar di dalam dokumen.'
     case 'finalizing':
-      return 'Generating summary metrics and preparing your download link.'
+      return 'Membuat metrik ringkasan dan menyiapkan tautan unduhan dokumen Anda.'
     default:
-      return 'Hold tight, this usually takes only a few seconds.'
+      return 'Harap tunggu, proses ini biasanya hanya memakan waktu beberapa detik.'
   }
 })
 </script>
