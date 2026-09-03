@@ -1,29 +1,29 @@
 <template>
-  <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+  <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
     <!-- Header with Daily Quota Indicator -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-700 pb-4">
       <div>
-        <h3 class="text-lg sm:text-xl font-black text-slate-900">Choose Compression Level</h3>
-        <p class="text-xs sm:text-sm text-slate-500">Select the balance between file size reduction and visual quality.</p>
+        <h3 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white">Pilih Tingkat Kompresi</h3>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Tentukan keseimbangan antara pengurangan ukuran dan ketajaman visual.</p>
       </div>
 
       <!-- Free Plan Daily Quota Badge -->
       <div class="flex items-center space-x-2 shrink-0">
         <div
           v-if="!isPro"
-          class="flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-slate-100 border border-slate-200/80 text-xs shadow-inner"
+          class="flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700 text-xs shadow-inner"
         >
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="text-slate-600 font-medium">Free Quota:</span>
-          <span class="font-bold text-slate-900 font-mono">{{ remainingQuota }} / {{ maxDailyLimit }}</span>
-          <span class="text-[10px] text-slate-400 font-medium">sisa hari ini</span>
+          <span class="text-slate-600 dark:text-slate-400 font-medium">Sisa Kuota:</span>
+          <span class="font-bold text-slate-900 dark:text-white font-mono">{{ remainingQuota }} / {{ maxDailyLimit }}</span>
+          <span class="text-[10px] text-slate-400 font-medium">hari ini</span>
         </div>
         <div
           v-else
-          class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800 font-bold shadow-xs"
+          class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 text-xs text-amber-800 dark:text-amber-300 font-bold shadow-xs"
         >
           <span>⭐</span>
-          <span>PRO: Unlimited Daily Usage</span>
+          <span>PRO: Kuota Tanpa Batas</span>
         </div>
       </div>
     </div>
@@ -37,8 +37,8 @@
         class="relative border-2 rounded-2xl p-5 cursor-pointer transition-all duration-200 flex flex-col justify-between group"
         :class="[
           selectedLevel === opt.id
-            ? 'border-brand-500 bg-brand-50/40 shadow-sm ring-2 ring-brand-500/20'
-            : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/60'
+            ? 'border-brand-500 bg-brand-50/40 dark:bg-brand-900/20 shadow-sm ring-2 ring-brand-500/20'
+            : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50/60 dark:hover:bg-slate-700/50'
         ]"
       >
         <!-- Top Badges -->
@@ -49,7 +49,7 @@
               :class="[
                 opt.recommended
                   ? 'bg-brand-500 text-white'
-                  : 'bg-slate-100 text-slate-700'
+                  : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
               ]"
             >
               {{ opt.badge }}
@@ -64,7 +64,7 @@
             </span>
             <span
               v-else
-              class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200"
+              class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
             >
               FREE
             </span>
@@ -76,7 +76,7 @@
             :class="[
               selectedLevel === opt.id
                 ? 'border-brand-500 bg-brand-500 text-white'
-                : 'border-slate-300 bg-white'
+                : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800'
             ]"
           >
             <div v-if="selectedLevel === opt.id" class="w-2 h-2 bg-white rounded-full"></div>
@@ -85,22 +85,22 @@
 
         <!-- Name & Description -->
         <div class="space-y-1 mb-4">
-          <h4 class="font-bold text-slate-800 text-base flex items-center space-x-1.5">
+          <h4 class="font-bold text-slate-800 dark:text-slate-100 text-base flex items-center space-x-1.5">
             <span>{{ opt.name }}</span>
             <span v-if="opt.isProOnly && !isPro" class="text-xs text-amber-500">🔒</span>
           </h4>
-          <p class="text-xs text-slate-500 leading-relaxed">{{ opt.description }}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{{ opt.description }}</p>
         </div>
 
         <!-- Specs breakdown -->
-        <div class="border-t border-slate-200/80 pt-3 space-y-1.5 text-xs">
-          <div class="flex justify-between text-slate-600">
-            <span>Resolution:</span>
-            <span class="font-semibold text-slate-800 font-mono">{{ opt.quality }}</span>
+        <div class="border-t border-slate-200/80 dark:border-slate-700 pt-3 space-y-1.5 text-xs">
+          <div class="flex justify-between text-slate-600 dark:text-slate-400">
+            <span>Resolusi:</span>
+            <span class="font-semibold text-slate-800 dark:text-slate-200 font-mono">{{ opt.quality }}</span>
           </div>
-          <div class="flex justify-between text-slate-600">
-            <span>Reduction:</span>
-            <span class="font-bold text-brand-600 font-mono">{{ opt.compression }}</span>
+          <div class="flex justify-between text-slate-600 dark:text-slate-400">
+            <span>Penyusutan:</span>
+            <span class="font-bold text-brand-600 dark:text-brand-400 font-mono">{{ opt.compression }}</span>
           </div>
         </div>
       </div>
@@ -112,21 +112,21 @@
         type="button"
         @click="handleCompressClick"
         :disabled="isProcessing"
-        class="w-full sm:w-auto min-w-[240px] px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-500 to-rose-500 hover:from-brand-600 hover:to-rose-600 disabled:bg-slate-300 text-white font-extrabold text-base shadow-lg shadow-brand-500/30 transition-all transform active:scale-98 flex items-center justify-center space-x-2"
+        class="w-full sm:w-auto min-w-[240px] px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-500 to-rose-500 hover:from-brand-600 hover:to-rose-600 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white font-extrabold text-base shadow-lg shadow-brand-500/30 transition-all transform active:scale-98 flex items-center justify-center space-x-2"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
         </svg>
-        <span>Compress PDF Now</span>
+        <span>Kompres PDF Sekarang</span>
       </button>
 
       <button
         v-if="!isPro"
         type="button"
         @click="$emit('requirePro')"
-        class="text-xs font-bold text-amber-600 hover:text-amber-700 underline"
+        class="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline"
       >
-        ✨ Unlock 300+ DPI Studio Master (PRO)
+        ✨ Buka Mode Lossless Studio Master 300+ DPI (PRO)
       </button>
     </div>
   </div>
